@@ -13,14 +13,14 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -38,6 +38,37 @@
         .header h1 {
             font-size: 32px;
             margin-bottom: 10px;
+        }
+
+        .header-copy {
+            margin: 0 auto;
+            max-width: 760px;
+            opacity: 0.92;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+
+        .connection-status,
+        .header-badge {
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+        }
+
+        .connection-status.connected {
+            background: rgba(76, 175, 80, 0.88);
+        }
+
+        .connection-status.disconnected {
+            background: rgba(255, 152, 0, 0.88);
         }
 
         .tabs {
@@ -88,16 +119,18 @@
             }
         }
 
-        /* Tab 1 - Map Dashboard */
         .dashboard-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.8fr);
+            grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
             gap: 24px;
             align-items: start;
         }
 
         .map-panel,
-        .section-panel {
+        .section-panel,
+        .operator-card,
+        .video-card,
+        .data-card {
             background: #f9fbff;
             border: 1px solid #dde5f4;
             border-radius: 18px;
@@ -256,52 +289,249 @@
             background: #f44336;
         }
 
-        @media (max-width: 900px) {
-            .dashboard-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .lot-map {
-                height: 480px;
-            }
-
-            .status-bar {
-                flex-direction: column;
-                gap: 14px;
-            }
+        .operator-layout,
+        .data-layout {
+            display: grid;
+            gap: 24px;
         }
 
-        /* Tab 2 & 3 Placeholder */
-        .placeholder {
+        .operator-layout {
+            grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+            align-items: start;
+        }
+
+        .data-layout {
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+        }
+
+        .field-label,
+        .mini-label {
+            display: block;
+            color: #55657f;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .device-select {
+            width: 100%;
+            margin-top: 8px;
+            padding: 12px 14px;
+            border: 1px solid #cad6ea;
+            border-radius: 10px;
+            background: white;
+            color: #24344d;
+            font-size: 15px;
+        }
+
+        .device-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .mini-card {
+            background: white;
+            border: 1px solid #d8e2f3;
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+
+        .mini-value {
+            color: #24344d;
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .terminal-controls {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 20px 0 14px;
+        }
+
+        .jetson-btn {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            color: white;
+            background: #667eea;
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.25);
+            transition: transform 0.12s ease, opacity 0.12s ease;
+        }
+
+        .jetson-btn.capture {
+            background: #00897b;
+            box-shadow: 0 6px 18px rgba(0, 137, 123, 0.25);
+        }
+
+        .jetson-btn.stop {
+            background: #f44336;
+            box-shadow: 0 6px 18px rgba(244, 67, 54, 0.25);
+        }
+
+        .jetson-btn:active {
+            transform: translateY(1px);
+        }
+
+        .jetson-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-message {
+            min-height: 24px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .status-message.success {
+            color: #2e7d32;
+        }
+
+        .status-message.error {
+            color: #c62828;
+        }
+
+        .video-card {
+            background: linear-gradient(180deg, #182339 0%, #101825 100%);
+            color: white;
+        }
+
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .video-header h2 {
+            font-size: 22px;
+        }
+
+        .video-window {
+            width: 100%;
+            min-height: 460px;
+            background: #000;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            padding: 24px;
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.82);
         }
 
-        .placeholder h2 {
-            font-size: 28px;
+        .live-stream {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .data-card {
+            min-height: 100%;
+        }
+
+        .data-section {
+            margin-top: 22px;
+        }
+
+        .data-section:first-child {
+            margin-top: 0;
+        }
+
+        .data-section-title {
+            font-size: 20px;
+            color: #24344d;
             margin-bottom: 10px;
-            color: #667eea;
         }
 
-        .connection-status {
-            padding: 10px 20px;
-            margin: 10px;
-            border-radius: 5px;
-            font-weight: bold;
+        pre {
+            background: #152238;
+            color: #f7fbff;
+            padding: 14px;
+            border-radius: 12px;
+            font-family: "SFMono-Regular", Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow: auto;
+            max-height: 320px;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
-        .connection-status.connected {
-            background: #4caf50;
-            color: white;
+        .list-grid,
+        .image-grid {
+            display: grid;
+            gap: 12px;
         }
 
-        .connection-status.disconnected {
-            background: #ff9800;
-            color: white;
+        .list-item,
+        .image-card {
+            background: white;
+            border: 1px solid #d8e2f3;
+            border-radius: 14px;
+            padding: 14px;
         }
 
-        /* Modal Styles */
+        .list-item strong,
+        .image-card strong {
+            display: block;
+            color: #24344d;
+            margin-bottom: 6px;
+        }
+
+        .list-item div,
+        .image-card div {
+            color: #5e6c84;
+            line-height: 1.5;
+        }
+
+        .image-grid {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .image-card {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .image-card img {
+            display: block;
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #e3ebf9;
+        }
+
+        .image-card-body {
+            padding: 12px 14px 14px;
+        }
+
+        .placeholder-panel {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7a879c;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -316,23 +546,11 @@
 
         .modal-content {
             background-color: white;
-            margin: 10% auto;
+            margin: 8% auto;
             padding: 30px;
             border-radius: 15px;
-            width: 400px;
+            width: min(420px, calc(100% - 32px));
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .modal-header {
@@ -376,151 +594,65 @@
             color: #f44336;
         }
 
-        /* OP Terminal styles - add below */
-        .video-window {
-            width: 100%;
-            max-width: 800px;
-            aspect-ratio: 1 / 1;
-            background: #000;
-            border: 2px solid #333;
-            margin: 20px auto 0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 16px;
+        @media (max-width: 980px) {
+            .dashboard-layout,
+            .operator-layout,
+            .data-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .lot-map {
+                height: 520px;
+            }
         }
 
-        .video-window img,
-        .video-window video,
-        .video-window iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            object-fit: cover;
-            background: #000;
-        }
+        @media (max-width: 720px) {
+            body {
+                padding: 10px;
+            }
 
-        .video-placeholder {
-            padding: 24px;
-            text-align: center;
-            line-height: 1.5;
-        }
+            .tab-content {
+                padding: 22px;
+            }
 
-        .terminal-controls {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin: 16px auto 40px;
-        }
+            .tabs {
+                flex-direction: column;
+            }
 
-        .feed-share-card {
-            width: 100%;
-            max-width: 800px;
-            margin: 16px auto 20px;
-            padding: 16px 18px;
-            text-align: left;
-            border-radius: 12px;
-            border: 1px solid #d8e2f3;
-            background: #f8fbff;
-            color: #44536b;
-        }
+            .status-bar {
+                flex-direction: column;
+                gap: 14px;
+            }
 
-        .feed-share-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #24344d;
-            margin-bottom: 8px;
-        }
+            .terminal-controls,
+            .device-stats {
+                grid-template-columns: 1fr;
+            }
 
-        .feed-share-copy {
-            line-height: 1.5;
-            margin-top: 8px;
-        }
-
-        .feed-code {
-            display: block;
-            margin-top: 10px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            background: #152238;
-            color: #f7fbff;
-            font-family: 'SFMono-Regular', Consolas, monospace;
-            font-size: 13px;
-            overflow-x: auto;
-        }
-
-        .feed-status {
-            min-height: 24px;
-            margin-top: 12px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .feed-status.success {
-            color: #2e7d32;
-        }
-
-        .feed-status.error {
-            color: #c62828;
-        }
-
-        .jetson-status {
-            min-height: 24px;
-            margin-top: 12px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .jetson-status.success {
-            color: #2e7d32;
-        }
-
-        .jetson-status.error {
-            color: #c62828;
-        }
-
-        .jetson-btn {
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            background: #667eea;
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(102,126,234,0.25);
-            transition: transform 0.12s ease;
-        }
-
-        .jetson-btn:active { transform: translateY(1px); }
-
-        .jetson-btn.stop {
-            background: #f44336;
-            box-shadow: 0 6px 18px rgba(244,67,54,0.25);
-        }
-
-        .jetson-btn:disabled {
-            opacity: 0.7;
-            cursor: wait;
+            .video-window {
+                min-height: 320px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🅿️ Parking Management System</h1>
-            <p>Real-time Parking Lot Monitor</p>
-            <div id="connectionStatus" class="connection-status disconnected">Connecting to backend...</div>
+            <h1>Parking Management System</h1>
+            <p class="header-copy">Your map dashboard stays intact. The backend now also supports cross-network Jetson devices, command queueing, uploaded images, and MJPEG frame relay for live streaming.</p>
+            <div class="header-meta">
+                <div id="connectionStatus" class="connection-status disconnected">Connecting to backend...</div>
+                <div id="deviceBadge" class="header-badge">Device: waiting</div>
+                <div id="timeBadge" class="header-badge">Server time: -</div>
+            </div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'tab1')">Dash</button>
+            <button class="tab-btn active" onclick="openTab(event, 'tab1')">Parking Lots</button>
             <button class="tab-btn" onclick="openTab(event, 'tab2')">OP Terminal</button>
             <button class="tab-btn" onclick="openTab(event, 'tab3')">Data</button>
         </div>
 
-        <!-- Tab 1: Parking Lots -->
         <div id="tab1" class="tab-content active">
             <div class="dashboard-layout">
                 <div class="map-panel">
@@ -539,7 +671,7 @@
                 <div class="section-panel">
                     <div class="panel-title">Section Summary</div>
                     <div class="panel-copy">
-                        Starting with Sections A and B. Send the next two section polygons and I can extend the same map immediately.
+                        Starting with Sections A and B. Live parking state now also updates from the Jetson backend telemetry path.
                     </div>
                     <div id="sectionSummary" class="section-summary"></div>
                     <div class="section-next">
@@ -557,77 +689,115 @@
                     <strong>Occupied: <span id="occupiedCount">0</span></strong>
                 </div>
                 <div class="status-item">
-                    <strong>Total: <span id="totalCount">40</span></strong>
+                    <strong>Total: <span id="totalCount">0</span></strong>
                 </div>
             </div>
         </div>
 
-        <!-- Tab 2: OP Terminal -->
         <div id="tab2" class="tab-content">
-            <div class="placeholder">
-                <h2>OP Terminal</h2>
-
-                <!-- blank square window where live feed will appear later -->
-                <div id="videoWindow" class="video-window">
-                    Live feed will appear here
-                </div>
-
-                <div class="feed-share-card">
-                    <div class="feed-share-title">Remote Feed Config</div>
-                    <div class="feed-share-copy">
-                        Expose this app publicly, then your friend can update the square display by POSTing a feed URL here:
+            <div class="operator-layout">
+                <div class="operator-card">
+                    <div class="panel-title">OP Terminal</div>
+                    <div class="panel-copy">
+                        Queue commands for the selected device. The website stays on this backend origin while the Jetson uploads frames and telemetry from its own network.
                     </div>
-                    <code id="feedConfigEndpoint" class="feed-code">Loading endpoint...</code>
-                    <div class="feed-share-copy">
-                        JSON body: {"url":"http://your-feed-link","mode":"mjpeg|video|iframe"}
+
+                    <label class="field-label" for="deviceSelect">Selected Device</label>
+                    <select id="deviceSelect" class="device-select"></select>
+
+                    <div class="device-stats">
+                        <div class="mini-card">
+                            <span class="mini-label">Status</span>
+                            <div id="deviceStatus" class="mini-value">Waiting</div>
+                        </div>
+                        <div class="mini-card">
+                            <span class="mini-label">Last Seen</span>
+                            <div id="deviceSeen" class="mini-value" style="font-size: 17px;">-</div>
+                        </div>
+                        <div class="mini-card">
+                            <span class="mini-label">Camera</span>
+                            <div id="deviceCamera" class="mini-value">Unknown</div>
+                        </div>
+                        <div class="mini-card">
+                            <span class="mini-label">Pending</span>
+                            <div id="devicePending" class="mini-value">0</div>
+                        </div>
                     </div>
-                    <div id="videoFeedStatus" class="feed-status">No live video feed configured yet.</div>
-                    <div class="feed-share-copy">Current feed: <span id="currentFeedUrl">None</span></div>
-                    <div class="feed-share-copy">Current mode: <span id="currentFeedMode">mjpeg</span></div>
+
+                    <div class="terminal-controls">
+                        <button id="startJetsonBtn" class="jetson-btn">Start Camera</button>
+                        <button id="stopJetsonBtn" class="jetson-btn stop">Stop Camera</button>
+                        <button id="captureImageBtn" class="jetson-btn capture">Capture Image</button>
+                    </div>
+
+                    <div id="jetsonStatus" class="status-message">No command sent yet.</div>
                 </div>
 
-                <!-- controls for starting/stopping Jetson (wired later) -->
-                <div class="terminal-controls">
-                    <button id="startJetsonBtn" class="jetson-btn">Start Jetson</button>
-                    <button id="stopJetsonBtn" class="jetson-btn stop">Stop Jetson</button>
+                <div class="video-card">
+                    <div class="video-header">
+                        <h2>Live Camera Feed</h2>
+                        <div id="streamHint">Waiting for uploaded frames</div>
+                    </div>
+                    <div id="videoWindow" class="video-window">
+                        <div id="videoPlaceholder" class="video-placeholder">
+                            No live frame has reached the backend yet. Once the Jetson uploads JPEG frames, the backend will relay them here as an MJPEG stream.
+                        </div>
+                        <img id="liveStream" class="live-stream hidden" alt="Live stream">
+                    </div>
                 </div>
-
-                <div id="jetsonStatus" class="jetson-status">Jetson controls ready.</div>
             </div>
         </div>
 
-        <!-- Tab 3: Settings -->
         <div id="tab3" class="tab-content">
-            <div class="placeholder">
-                <h2>⚙️ Settings</h2>
-                <p>Coming soon...</p>
+            <div class="data-layout">
+                <div class="data-card">
+                    <div class="data-section">
+                        <div class="data-section-title">Latest Telemetry</div>
+                        <pre id="telemetryJson">{}</pre>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-section-title">Recent Commands</div>
+                        <div id="commandsList" class="list-grid"></div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-section">
+                        <div class="data-section-title">Recent Images</div>
+                        <div id="recentImages" class="image-grid"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Modal for vehicle info -->
         <div id="vehicleModal" class="modal">
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
-                <div class="modal-header">📍 Parking Space <span id="spaceIdDisplay"></span></div>
-                
+                <div class="modal-header">Parking Space <span id="spaceIdDisplay"></span></div>
+
                 <div class="modal-item">
-                    <div class="modal-label">🚗 License Plate</div>
+                    <div class="modal-label">License Plate</div>
                     <div class="modal-value" id="licensePlateDisplay">-</div>
                 </div>
-                
+
                 <div class="modal-item">
-                    <div class="modal-label">📌 Latitude</div>
+                    <div class="modal-label">Latitude</div>
                     <div class="modal-value" id="latitudeDisplay">-</div>
                 </div>
-                
+
                 <div class="modal-item">
-                    <div class="modal-label">📌 Longitude</div>
+                    <div class="modal-label">Longitude</div>
                     <div class="modal-value" id="longitudeDisplay">-</div>
                 </div>
-                
+
                 <div class="modal-item">
-                    <div class="modal-label">⏰ Parked Time</div>
+                    <div class="modal-label">Parked Time</div>
                     <div class="modal-value" id="timeDisplay">-</div>
+                </div>
+
+                <div class="modal-item">
+                    <div class="modal-label">Source Device</div>
+                    <div class="modal-value" id="deviceIdDisplay">-</div>
                 </div>
             </div>
         </div>
@@ -635,29 +805,102 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let parkingStatus = {};
+        const API_BASE = "/api";
+        let appState = {
+            parking_spaces: {},
+            devices: [],
+            recent_commands: [],
+            summary: {},
+            default_device_id: null,
+            server_time: null
+        };
         let mapData = null;
         let parkingMap = null;
-        let baseLayer = null;
         let lotOutlineLayer = null;
         let sectionLayerGroup = null;
         let sectionLabelGroup = null;
         let spaceLayerGroup = null;
-        let activeVideoFeedSignature = '';
-        const API_URL = `${window.location.origin}/api`;
         let isBackendConnected = false;
+        let selectedDeviceId = null;
+        let eventSource = null;
+        let refreshTimer = null;
+        let currentStreamUrl = null;
+        let lastLoadError = "";
+
+        const esc = value => String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;")
+            .replaceAll("'", "&#39;");
+
+        const timeText = value => {
+            if (!value) {
+                return "-";
+            }
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+        };
+
+        function formatCoordinate(value) {
+            const numeric = Number(value);
+            return Number.isFinite(numeric) ? numeric.toFixed(6) : "-";
+        }
+
+        async function fetchJson(url, options = {}) {
+            const response = await fetch(url, options);
+            if (response.status === 204) {
+                return null;
+            }
+
+            const contentType = response.headers.get("content-type") || "";
+            const body = contentType.includes("application/json")
+                ? await response.json()
+                : await response.text();
+
+            if (!response.ok) {
+                throw new Error(typeof body === "string" ? body : body.error || body.message || response.statusText);
+            }
+            return body;
+        }
+
+        function normalizePoint(point) {
+            if (Array.isArray(point)) {
+                return { latitude: point[0], longitude: point[1] };
+            }
+            return point || { latitude: null, longitude: null };
+        }
 
         function toLatLngs(points) {
-            return points.map(point => [point.latitude, point.longitude]);
+            return (points || []).map(point => {
+                const normalized = normalizePoint(point);
+                return [normalized.latitude, normalized.longitude];
+            });
         }
 
         function spaceStyle(spaceData) {
             return {
-                color: '#ffffff',
+                color: "#ffffff",
                 weight: 1,
-                fillColor: spaceData.occupied ? '#d32f2f' : '#2e7d32',
+                fillColor: spaceData.occupied ? "#d32f2f" : "#2e7d32",
                 fillOpacity: 0.78
             };
+        }
+
+        function chooseDevice() {
+            const ids = appState.devices.map(device => device.device_id);
+            if (selectedDeviceId && ids.includes(selectedDeviceId)) {
+                return;
+            }
+            if (appState.default_device_id && ids.includes(appState.default_device_id)) {
+                selectedDeviceId = appState.default_device_id;
+                return;
+            }
+            selectedDeviceId = ids[0] || null;
+        }
+
+        function getDevice() {
+            return appState.devices.find(device => device.device_id === selectedDeviceId) || null;
         }
 
         function createMapIfNeeded() {
@@ -665,15 +908,15 @@
                 return;
             }
 
-            parkingMap = L.map('lotMap', {
+            parkingMap = L.map("lotMap", {
                 zoomControl: true,
                 attributionControl: true
             });
 
-            baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxNativeZoom: 19,
                 maxZoom: 22,
-                attribution: '&copy; OpenStreetMap contributors'
+                attribution: "&copy; OpenStreetMap contributors"
             }).addTo(parkingMap);
 
             sectionLayerGroup = L.layerGroup().addTo(parkingMap);
@@ -682,14 +925,18 @@
         }
 
         function renderLotBounds(bounds) {
+            if (!parkingMap || !bounds || !bounds.length) {
+                return;
+            }
+
             if (lotOutlineLayer) {
                 lotOutlineLayer.remove();
             }
 
             lotOutlineLayer = L.polygon(toLatLngs(bounds), {
-                color: '#546e7a',
+                color: "#546e7a",
                 weight: 1,
-                dashArray: '6 6',
+                dashArray: "6 6",
                 fillOpacity: 0
             }).addTo(parkingMap);
 
@@ -699,14 +946,18 @@
         }
 
         function renderSections(sections) {
+            if (!sectionLayerGroup || !sectionLabelGroup) {
+                return;
+            }
+
             sectionLayerGroup.clearLayers();
             sectionLabelGroup.clearLayers();
 
-            Object.entries(sections).forEach(([sectionId, sectionData]) => {
+            Object.entries(sections || {}).forEach(([, sectionData]) => {
                 L.polygon(toLatLngs(sectionData.corners), {
-                    color: '#1a73e8',
+                    color: "#1a73e8",
                     weight: 2,
-                    fillColor: '#4d90fe',
+                    fillColor: "#4d90fe",
                     fillOpacity: 0.08
                 }).addTo(sectionLayerGroup);
 
@@ -714,8 +965,8 @@
                     [sectionData.center.latitude, sectionData.center.longitude],
                     {
                         icon: L.divIcon({
-                            className: 'section-label',
-                            html: `<span>${sectionData.name}</span>`
+                            className: "section-label",
+                            html: `<span>${esc(sectionData.name)}</span>`
                         })
                     }
                 ).addTo(sectionLabelGroup);
@@ -723,270 +974,338 @@
         }
 
         function renderSpaces(spaces) {
+            if (!spaceLayerGroup) {
+                return;
+            }
+
             spaceLayerGroup.clearLayers();
 
-            Object.entries(spaces).forEach(([spaceId, spaceData]) => {
+            Object.entries(spaces || {}).forEach(([spaceId, spaceData]) => {
                 const polygon = L.polygon(toLatLngs(spaceData.polygon), spaceStyle(spaceData))
                     .addTo(spaceLayerGroup)
                     .bindTooltip(
-                        `${spaceId} · ${spaceData.occupied ? 'Occupied' : 'Available'}`,
+                        `${spaceId} - ${spaceData.occupied ? "Occupied" : "Available"}`,
                         {
-                            direction: 'top',
+                            direction: "top",
                             sticky: true,
-                            className: 'parking-tooltip'
+                            className: "parking-tooltip"
                         }
                     );
 
                 if (spaceData.occupied) {
-                    polygon.on('click', () => showVehicleInfo(spaceId));
+                    polygon.on("click", () => showVehicleInfo(spaceId));
                 }
             });
         }
 
         function renderSectionSummary(sections, spaces) {
-            const summary = document.getElementById('sectionSummary');
+            const summary = document.getElementById("sectionSummary");
+            if (!sections || !Object.keys(sections).length) {
+                summary.innerHTML = `
+                    <div class="section-card">
+                        <h3>Map Unavailable</h3>
+                        <div class="section-meta">${esc(lastLoadError || "Unable to load map data.")}</div>
+                    </div>
+                `;
+                return;
+            }
+
             const cards = Object.entries(sections)
                 .sort(([leftId], [rightId]) => leftId.localeCompare(rightId))
                 .map(([sectionId, sectionData]) => {
-                    const sectionSpaces = Object.entries(spaces).filter(([, space]) => space.section_id === sectionId);
+                    const sectionSpaces = Object.entries(spaces || {}).filter(([, space]) => space.section_id === sectionId);
                     const occupied = sectionSpaces.filter(([, space]) => space.occupied).length;
                     const total = sectionSpaces.length;
 
                     return `
                         <div class="section-card">
-                            <h3>${sectionData.name}</h3>
+                            <h3>${esc(sectionData.name)}</h3>
                             <div class="section-meta">
-                                ${occupied} occupied / ${total - occupied} available<br>
+                                ${occupied} occupied / ${Math.max(total - occupied, 0)} available<br>
                                 ${total} mapped stalls
                             </div>
                         </div>
                     `;
                 });
 
-            summary.innerHTML = cards.join('');
+            summary.innerHTML = cards.join("");
         }
 
-        async function initializeParkingLots() {
-            try {
-                const response = await fetch(`${API_URL}/map-data`);
-                const data = await response.json();
+        function renderMapTab() {
+            if (!mapData) {
+                renderSectionSummary(null, null);
+                return;
+            }
 
-                if (!response.ok) {
-                    throw new Error(data.message || `Failed to load map data (${response.status})`);
+            createMapIfNeeded();
+            renderLotBounds(mapData.lot_bounds);
+            renderSections(mapData.sections);
+            renderSpaces(appState.parking_spaces);
+            renderSectionSummary(mapData.sections, appState.parking_spaces);
+        }
+
+        function updateParkingCounts() {
+            const summary = appState.summary || {};
+            document.getElementById("occupiedCount").textContent = summary.occupied_spaces ?? 0;
+            document.getElementById("availableCount").textContent = summary.available_spaces ?? 0;
+            document.getElementById("totalCount").textContent = summary.total_spaces ?? 0;
+        }
+
+        function updateHeader() {
+            const statusElement = document.getElementById("connectionStatus");
+            if (isBackendConnected) {
+                statusElement.textContent = "Connected to Backend";
+                statusElement.className = "connection-status connected";
+            } else {
+                statusElement.textContent = "Offline Mode";
+                statusElement.className = "connection-status disconnected";
+            }
+
+            document.getElementById("deviceBadge").textContent = `Device: ${selectedDeviceId || "waiting"}`;
+            document.getElementById("timeBadge").textContent = `Server time: ${timeText(appState.server_time)}`;
+        }
+
+        function setCommandStatus(message, type = "") {
+            const statusElement = document.getElementById("jetsonStatus");
+            statusElement.textContent = message;
+            statusElement.className = `status-message${type ? ` ${type}` : ""}`;
+        }
+
+        function renderDevicePanel() {
+            const select = document.getElementById("deviceSelect");
+            select.innerHTML = "";
+
+            if (!appState.devices.length) {
+                select.disabled = true;
+                select.innerHTML = '<option value="">No devices yet</option>';
+                selectedDeviceId = null;
+            } else {
+                chooseDevice();
+                select.disabled = false;
+                appState.devices.forEach(device => {
+                    const option = document.createElement("option");
+                    option.value = device.device_id;
+                    option.textContent = `${device.name} (${device.device_id})`;
+                    select.appendChild(option);
+                });
+                select.value = selectedDeviceId;
+            }
+
+            const device = getDevice();
+            document.getElementById("deviceStatus").textContent = device ? (device.is_online ? "Online" : "Waiting") : "Waiting";
+            document.getElementById("deviceSeen").textContent = device ? timeText(device.last_seen_at) : "-";
+            document.getElementById("deviceCamera").textContent = device ? (device.camera_on ? "On" : "Off") : "Unknown";
+            document.getElementById("devicePending").textContent = device ? String(device.pending_command_count ?? 0) : "0";
+
+            document.querySelectorAll(".jetson-btn").forEach(button => {
+                button.disabled = !device;
+            });
+
+            const streamHint = document.getElementById("streamHint");
+            const placeholder = document.getElementById("videoPlaceholder");
+            const image = document.getElementById("liveStream");
+            const nextStreamUrl = device && device.latest_frame_available ? device.stream_url : null;
+
+            if (nextStreamUrl) {
+                if (currentStreamUrl !== nextStreamUrl) {
+                    image.src = `${nextStreamUrl}?ts=${Date.now()}`;
+                    currentStreamUrl = nextStreamUrl;
+                }
+                streamHint.textContent = `Backend relay active for ${device.device_id}`;
+                image.classList.remove("hidden");
+                placeholder.classList.add("hidden");
+            } else {
+                streamHint.textContent = "Waiting for uploaded frames";
+                image.classList.add("hidden");
+                image.removeAttribute("src");
+                placeholder.classList.remove("hidden");
+                currentStreamUrl = null;
+            }
+        }
+
+        function renderDataTab() {
+            const device = getDevice();
+            document.getElementById("telemetryJson").textContent = JSON.stringify(device ? (device.last_telemetry || {}) : {}, null, 2);
+
+            const commands = document.getElementById("commandsList");
+            commands.innerHTML = "";
+            if (!appState.recent_commands.length) {
+                commands.innerHTML = '<div class="placeholder-panel">No commands have been queued yet.</div>';
+            } else {
+                appState.recent_commands.forEach(command => {
+                    const item = document.createElement("div");
+                    item.className = "list-item";
+                    item.innerHTML = `
+                        <strong>${esc(command.command)} #${esc(command.id)}</strong>
+                        <div>Status: ${esc(command.status)}</div>
+                        <div>Device: ${esc(command.device_id)}</div>
+                        <div>Created: ${esc(timeText(command.created_at))}</div>
+                        <div>Result: ${esc(JSON.stringify(command.result || {}))}</div>
+                    `;
+                    commands.appendChild(item);
+                });
+            }
+
+            const images = document.getElementById("recentImages");
+            images.innerHTML = "";
+            const recentImages = device ? (device.recent_images || []) : [];
+            if (!recentImages.length) {
+                images.innerHTML = '<div class="placeholder-panel">No images uploaded for the selected device yet.</div>';
+            } else {
+                recentImages.forEach(image => {
+                    const card = document.createElement("div");
+                    card.className = "image-card";
+                    card.innerHTML = `
+                        <img src="${esc(image.url)}?ts=${Date.now()}" alt="Uploaded image">
+                        <div class="image-card-body">
+                            <strong>${esc((image.metadata && image.metadata.license_plate) || image.original_filename || image.filename)}</strong>
+                            <div>${esc(timeText(image.created_at))}</div>
+                        </div>
+                    `;
+                    images.appendChild(card);
+                });
+            }
+        }
+
+        function renderAll() {
+            chooseDevice();
+            updateHeader();
+            updateParkingCounts();
+            renderMapTab();
+            renderDevicePanel();
+            renderDataTab();
+        }
+
+        async function loadState(forceMap = false) {
+            try {
+                const requests = [fetchJson(`${API_BASE}/system/state`)];
+                if (forceMap || !mapData) {
+                    requests.push(fetchJson(`${API_BASE}/map-data`));
+                } else {
+                    requests.push(Promise.resolve(null));
                 }
 
-                mapData = data;
-                parkingStatus = data.spaces;
+                const [systemState, latestMapData] = await Promise.all(requests);
+                appState = systemState || appState;
+                if (latestMapData) {
+                    mapData = latestMapData;
+                }
                 isBackendConnected = true;
-                updateConnectionStatus();
-
-                createMapIfNeeded();
-                renderLotBounds(data.lot_bounds);
-                renderSections(data.sections);
-                renderSpaces(data.spaces);
-                renderSectionSummary(data.sections, data.spaces);
-                updateStatus();
+                lastLoadError = "";
             } catch (error) {
-                console.error('Error loading parking map:', error);
                 isBackendConnected = false;
-                updateConnectionStatus();
-                document.getElementById('sectionSummary').innerHTML = `
-                    <div class="section-card">
-                        <h3>Map Unavailable</h3>
-                        <div class="section-meta">${error.message}</div>
-                    </div>
-                `;
+                lastLoadError = error.message;
+                setCommandStatus(`Backend error: ${error.message}`, "error");
+            }
+
+            renderAll();
+        }
+
+        function scheduleRefresh(delay = 200) {
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(() => loadState(false), delay);
+        }
+
+        function connectEvents() {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            eventSource = new EventSource(`${API_BASE}/events`);
+            eventSource.addEventListener("state.changed", () => scheduleRefresh(120));
+            eventSource.onerror = () => {
+                isBackendConnected = false;
+                updateHeader();
+            };
+        }
+
+        async function sendDeviceCommand(command) {
+            if (!selectedDeviceId) {
+                setCommandStatus("Select a device before sending a command.", "error");
+                return;
+            }
+
+            setCommandStatus(`Sending ${command} to ${selectedDeviceId}...`);
+            try {
+                const result = await fetchJson(`${API_BASE}/devices/${selectedDeviceId}/commands`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        command,
+                        payload: {
+                            requested_at: new Date().toISOString(),
+                            source: "website"
+                        }
+                    })
+                });
+
+                setCommandStatus(`Queued ${result.command.command} as command #${result.command.id}.`, "success");
+                scheduleRefresh(100);
+            } catch (error) {
+                setCommandStatus(`Command failed: ${error.message}`, "error");
             }
         }
 
         function showVehicleInfo(spaceId) {
-            const spaceData = parkingStatus[spaceId];
-            if (spaceData && spaceData.occupied) {
-                const vehicleData = spaceData.vehicle_data;
-                if (vehicleData) {
-                    const time = new Date(vehicleData.time).toLocaleString();
-                    
-                    document.getElementById('spaceIdDisplay').textContent = spaceId;
-                    document.getElementById('licensePlateDisplay').textContent = vehicleData.license_plate;
-                    document.getElementById('latitudeDisplay').textContent = vehicleData.latitude.toFixed(6);
-                    document.getElementById('longitudeDisplay').textContent = vehicleData.longitude.toFixed(6);
-                    document.getElementById('timeDisplay').textContent = time;
-                    
-                    document.getElementById('vehicleModal').style.display = 'block';
-                }
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('vehicleModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('vehicleModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        function updateStatus() {
-            const occupied = Object.values(parkingStatus).filter(v => v.occupied).length;
-            const available = Object.values(parkingStatus).filter(v => !v.occupied).length;
-
-            document.getElementById('occupiedCount').textContent = occupied;
-            document.getElementById('availableCount').textContent = available;
-            document.getElementById('totalCount').textContent = occupied + available;
-        }
-
-        function updateConnectionStatus() {
-            const statusElement = document.getElementById('connectionStatus');
-            if (isBackendConnected) {
-                statusElement.textContent = '✓ Connected to Backend';
-                statusElement.className = 'connection-status connected';
-            } else {
-                statusElement.textContent = '⚠ Offline Mode (Backend Unavailable)';
-                statusElement.className = 'connection-status disconnected';
-            }
-        }
-
-        function updateFeedConfigEndpoint() {
-            document.getElementById('feedConfigEndpoint').textContent = `${window.location.origin}/api/video-feed/config`;
-        }
-
-        function updateVideoFeedStatus(message, type = '') {
-            const statusElement = document.getElementById('videoFeedStatus');
-            statusElement.textContent = message;
-            statusElement.className = `feed-status${type ? ` ${type}` : ''}`;
-        }
-
-        function renderVideoPlaceholder(message) {
-            const videoWindow = document.getElementById('videoWindow');
-            videoWindow.innerHTML = `<div class="video-placeholder">${message}</div>`;
-        }
-
-        function renderVideoFeed(feedConfig) {
-            const videoWindow = document.getElementById('videoWindow');
-            const feedUrl = (feedConfig.url || '').trim();
-            const feedMode = (feedConfig.mode || 'mjpeg').trim().toLowerCase();
-
-            document.getElementById('currentFeedUrl').textContent = feedUrl || 'None';
-            document.getElementById('currentFeedMode').textContent = feedMode;
-
-            if (!feedUrl) {
-                renderVideoPlaceholder('No live video feed configured yet. Once a public feed URL is posted to this app, it will appear here automatically.');
-                updateVideoFeedStatus('Waiting for a public feed URL.', '');
+            const vehicle = appState.parking_spaces[spaceId] ? appState.parking_spaces[spaceId].vehicle_data : null;
+            if (!vehicle) {
                 return;
             }
 
-            const proxyUrl = `${API_URL}/video-feed/proxy?ts=${Date.now()}`;
-
-            if (feedMode === 'iframe') {
-                videoWindow.innerHTML = `<iframe src="${feedUrl}" allow="autoplay; fullscreen"></iframe>`;
-            } else if (feedMode === 'video') {
-                videoWindow.innerHTML = `<video src="${proxyUrl}" autoplay muted playsinline controls></video>`;
-            } else {
-                videoWindow.innerHTML = `<img src="${proxyUrl}" alt="Live video feed">`;
-            }
-
-            updateVideoFeedStatus(`Live feed ready in ${feedMode} mode.`, 'success');
+            document.getElementById("spaceIdDisplay").textContent = spaceId;
+            document.getElementById("licensePlateDisplay").textContent = vehicle.license_plate || "-";
+            document.getElementById("latitudeDisplay").textContent = formatCoordinate(vehicle.latitude);
+            document.getElementById("longitudeDisplay").textContent = formatCoordinate(vehicle.longitude);
+            document.getElementById("timeDisplay").textContent = timeText(vehicle.time);
+            document.getElementById("deviceIdDisplay").textContent = vehicle.device_id || "-";
+            document.getElementById("vehicleModal").style.display = "block";
         }
 
-        async function refreshVideoFeedConfig(forceRender = false) {
-            updateFeedConfigEndpoint();
-
-            try {
-                const response = await fetch(`${API_URL}/video-feed/config`, {
-                    cache: 'no-store'
-                });
-                const feedConfig = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(feedConfig.error || `Failed to load feed config (${response.status})`);
-                }
-
-                const feedSignature = JSON.stringify(feedConfig);
-                if (forceRender || feedSignature !== activeVideoFeedSignature) {
-                    activeVideoFeedSignature = feedSignature;
-                    renderVideoFeed(feedConfig);
-                }
-            } catch (error) {
-                console.error('Error loading video feed config:', error);
-                updateVideoFeedStatus(`Video feed unavailable: ${error.message}`, 'error');
-
-                if (!activeVideoFeedSignature || forceRender) {
-                    renderVideoPlaceholder('Unable to load the live feed configuration.');
-                }
-            }
+        function closeModal() {
+            document.getElementById("vehicleModal").style.display = "none";
         }
 
-        function setJetsonButtonsDisabled(disabled) {
-            document.getElementById('startJetsonBtn').disabled = disabled;
-            document.getElementById('stopJetsonBtn').disabled = disabled;
-        }
+        function openTab(event, tabName) {
+            document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(button => button.classList.remove("active"));
 
-        function updateJetsonStatus(message, type = '') {
-            const statusElement = document.getElementById('jetsonStatus');
-            statusElement.textContent = message;
-            statusElement.className = `jetson-status${type ? ` ${type}` : ''}`;
-        }
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
 
-        async function sendJetsonCommand(command) {
-            setJetsonButtonsDisabled(true);
-            updateJetsonStatus(`Sending ${command === 'on' ? 'start' : 'stop'} command to Jetson...`);
-
-            try {
-                const response = await fetch(`${API_URL}/system/${command}`, {
-                    method: 'POST'
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || `Request failed with status ${response.status}`);
-                }
-
-                updateJetsonStatus(
-                    command === 'on' ? 'Jetson start command sent successfully.' : 'Jetson stop command sent successfully.',
-                    'success'
-                );
-            } catch (error) {
-                console.error(`Jetson ${command} request failed:`, error);
-                updateJetsonStatus(`Jetson command failed: ${error.message}`, 'error');
-            } finally {
-                setJetsonButtonsDisabled(false);
-            }
-        }
-
-        document.getElementById('startJetsonBtn').addEventListener('click', () => {
-            sendJetsonCommand('on');
-        });
-
-        document.getElementById('stopJetsonBtn').addEventListener('click', () => {
-            sendJetsonCommand('off');
-        });
-
-        function openTab(evt, tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(tab => tab.classList.remove('active'));
-
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            tabBtns.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-
-            if (tabName === 'tab1' && parkingMap) {
+            if (tabName === "tab1" && parkingMap) {
                 window.setTimeout(() => parkingMap.invalidateSize(), 50);
             }
         }
 
-        // Refresh parking data every 60 seconds (1 minute)
-        setInterval(initializeParkingLots, 60000);
-        setInterval(refreshVideoFeedConfig, 5000);
+        document.getElementById("deviceSelect").addEventListener("change", event => {
+            selectedDeviceId = event.target.value || null;
+            renderAll();
+        });
 
-        // Initialize on page load
-        initializeParkingLots();
-        refreshVideoFeedConfig(true);
+        document.getElementById("startJetsonBtn").addEventListener("click", () => {
+            sendDeviceCommand("camera_on");
+        });
+
+        document.getElementById("stopJetsonBtn").addEventListener("click", () => {
+            sendDeviceCommand("camera_off");
+        });
+
+        document.getElementById("captureImageBtn").addEventListener("click", () => {
+            sendDeviceCommand("capture_image");
+        });
+
+        window.addEventListener("click", event => {
+            const modal = document.getElementById("vehicleModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        setInterval(() => loadState(false), 15000);
+        loadState(true);
+        connectEvents();
     </script>
 </body>
 </html>

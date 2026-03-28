@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+runtime_data/
+*.log
+.uv-cache/
+.uv-python/
