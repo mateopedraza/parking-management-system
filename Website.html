@@ -188,6 +188,38 @@
             background: #1a73e8;
         }
 
+        .legend-swatch.crack {
+            position: relative;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #ffb300 0%, #fb8c00 100%);
+        }
+
+        .legend-swatch.crack::before {
+            content: "";
+            position: absolute;
+            inset: 1px 4px;
+            background: linear-gradient(180deg, transparent 0%, #5d4037 12%, #5d4037 38%, transparent 38%, transparent 52%, #5d4037 52%, #5d4037 100%);
+            clip-path: polygon(50% 0%, 28% 24%, 64% 44%, 36% 62%, 72% 100%, 50% 100%, 18% 62%, 50% 42%, 22% 24%, 50% 0%);
+            border-radius: 4px;
+        }
+
+        .legend-swatch.sign {
+            position: relative;
+            background: #d32f2f;
+            border-radius: 4px;
+        }
+
+        .legend-swatch.sign::before {
+            content: "";
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            top: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
         .lot-map {
             height: 620px;
             border-radius: 14px;
@@ -259,6 +291,64 @@
             line-height: 1.5;
         }
 
+        .detection-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .detection-item {
+            border-radius: 12px;
+            border: 1px solid #d8e2f3;
+            background: #f8fbff;
+            padding: 12px 14px;
+        }
+
+        .detection-item strong {
+            display: block;
+            color: #24344d;
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .detection-item div {
+            color: #5e6c84;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .detection-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .detection-pill.crack {
+            background: #fff3e0;
+            color: #bf6d00;
+        }
+
+        .detection-pill.sign {
+            background: #fdecea;
+            color: #b71c1c;
+        }
+
+        .env-marker {
+            background: transparent;
+            border: none;
+        }
+
+        .env-marker-icon {
+            width: 36px;
+            height: 36px;
+            filter: drop-shadow(0 10px 18px rgba(29, 40, 61, 0.24));
+        }
+
         .status-bar {
             display: flex;
             justify-content: space-around;
@@ -287,6 +377,15 @@
 
         .status-color.occupied {
             background: #f44336;
+        }
+
+        .status-color.crack {
+            background: linear-gradient(135deg, #ffb300 0%, #fb8c00 100%);
+        }
+
+        .status-color.sign {
+            background: #d32f2f;
+            border-radius: 4px;
         }
 
         .operator-layout,
@@ -651,6 +750,7 @@
             <button class="tab-btn active" onclick="openTab(event, 'tab1')">Parking Lots</button>
             <button class="tab-btn" onclick="openTab(event, 'tab2')">OP Terminal</button>
             <button class="tab-btn" onclick="openTab(event, 'tab3')">Data</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab4')">Environment</button>
         </div>
 
         <div id="tab1" class="tab-content active">
@@ -671,7 +771,7 @@
                 <div class="section-panel">
                     <div class="panel-title">Section Summary</div>
                     <div class="panel-copy">
-                        Starting with Sections A and B. Live parking state now also updates from the Jetson backend telemetry path.
+                        Sections A, B, 3, and 4 are now mapped. Live parking state also updates from the Jetson backend telemetry path.
                     </div>
                     <div id="sectionSummary" class="section-summary"></div>
                     <div class="section-next">
@@ -770,6 +870,46 @@
             </div>
         </div>
 
+        <div id="tab4" class="tab-content">
+            <div class="dashboard-layout">
+                <div class="map-panel">
+                    <div class="panel-title">Environmental Detection Overlay</div>
+                    <div class="panel-copy">
+                        This map mirrors the lot dashboard and plots fixed crack and sign detections on the same parking lot outline.
+                    </div>
+                    <div class="map-legend">
+                        <div class="legend-chip"><span class="legend-swatch crack"></span>Crack detected</div>
+                        <div class="legend-chip"><span class="legend-swatch sign"></span>Sign detected</div>
+                    </div>
+                    <div id="environmentMap" class="lot-map"></div>
+                </div>
+
+                <div class="section-panel">
+                    <div class="panel-title">Detection Summary</div>
+                    <div class="panel-copy">
+                        Each detection is listed with its mapped coordinates so you can cross-check the visual marker placement against the inspection inputs.
+                    </div>
+                    <div id="environmentSummary" class="section-summary"></div>
+                    <div class="section-next">
+                        The backend payload now accepts crack detections plus multiple sign kinds. New coordinates added there will render here automatically.
+                    </div>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-color crack"></span>
+                    <strong>Cracks: <span id="crackCount">0</span></strong>
+                </div>
+                <div class="status-item">
+                    <span class="status-color sign"></span>
+                    <strong>Signs: <span id="signCount">0</span></strong>
+                </div>
+                <div class="status-item">
+                    <strong>Total: <span id="environmentalTotalCount">0</span></strong>
+                </div>
+            </div>
+        </div>
+
         <div id="vehicleModal" class="modal">
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -820,12 +960,19 @@
         let sectionLayerGroup = null;
         let sectionLabelGroup = null;
         let spaceLayerGroup = null;
+        let environmentMap = null;
+        let environmentLotOutlineLayer = null;
+        let environmentDetectionLayerGroup = null;
         let isBackendConnected = false;
         let selectedDeviceId = null;
         let eventSource = null;
         let refreshTimer = null;
         let currentStreamUrl = null;
         let lastLoadError = "";
+        const EMPTY_ENVIRONMENTAL_DETECTIONS = {
+            cracks: [],
+            signs: []
+        };
 
         const esc = value => String(value ?? "")
             .replaceAll("&", "&amp;")
@@ -903,12 +1050,8 @@
             return appState.devices.find(device => device.device_id === selectedDeviceId) || null;
         }
 
-        function createMapIfNeeded() {
-            if (parkingMap) {
-                return;
-            }
-
-            parkingMap = L.map("lotMap", {
+        function createBaseMap(containerId) {
+            const map = L.map(containerId, {
                 zoomControl: true,
                 attributionControl: true
             });
@@ -917,41 +1060,69 @@
                 maxNativeZoom: 19,
                 maxZoom: 22,
                 attribution: "&copy; OpenStreetMap contributors"
-            }).addTo(parkingMap);
+            }).addTo(map);
 
+            return map;
+        }
+
+        function createMapIfNeeded() {
+            if (parkingMap) {
+                return;
+            }
+
+            parkingMap = createBaseMap("lotMap");
             sectionLayerGroup = L.layerGroup().addTo(parkingMap);
             sectionLabelGroup = L.layerGroup().addTo(parkingMap);
             spaceLayerGroup = L.layerGroup().addTo(parkingMap);
         }
 
-        function renderLotBounds(bounds) {
-            if (!parkingMap || !bounds || !bounds.length) {
+        function createEnvironmentMapIfNeeded() {
+            if (environmentMap) {
                 return;
             }
 
-            if (lotOutlineLayer) {
-                lotOutlineLayer.remove();
+            environmentMap = createBaseMap("environmentMap");
+            environmentDetectionLayerGroup = L.layerGroup().addTo(environmentMap);
+        }
+
+        function renderLotBoundsOnMap(targetMap, existingLayer, bounds) {
+            if (!targetMap || !bounds || !bounds.length) {
+                return existingLayer;
             }
 
-            lotOutlineLayer = L.polygon(toLatLngs(bounds), {
+            if (existingLayer) {
+                existingLayer.remove();
+            }
+
+            const nextLayer = L.polygon(toLatLngs(bounds), {
                 color: "#546e7a",
                 weight: 1,
                 dashArray: "6 6",
                 fillOpacity: 0
-            }).addTo(parkingMap);
+            }).addTo(targetMap);
 
-            parkingMap.fitBounds(lotOutlineLayer.getBounds(), {
+            targetMap.fitBounds(nextLayer.getBounds(), {
                 padding: [24, 24]
             });
+
+            return nextLayer;
         }
 
-        function renderSections(sections) {
-            if (!sectionLayerGroup || !sectionLabelGroup) {
+        function renderLotBounds(bounds) {
+            lotOutlineLayer = renderLotBoundsOnMap(parkingMap, lotOutlineLayer, bounds);
+        }
+
+        function renderEnvironmentLotBounds(bounds) {
+            environmentLotOutlineLayer = renderLotBoundsOnMap(environmentMap, environmentLotOutlineLayer, bounds);
+        }
+
+        function renderSectionsOnMap(targetSectionLayerGroup, targetSectionLabelGroup, sections) {
+            if (!targetSectionLayerGroup || !targetSectionLabelGroup) {
                 return;
             }
 
-            sectionLayerGroup.clearLayers();
-            sectionLabelGroup.clearLayers();
+            targetSectionLayerGroup.clearLayers();
+            targetSectionLabelGroup.clearLayers();
 
             Object.entries(sections || {}).forEach(([, sectionData]) => {
                 L.polygon(toLatLngs(sectionData.corners), {
@@ -959,7 +1130,7 @@
                     weight: 2,
                     fillColor: "#4d90fe",
                     fillOpacity: 0.08
-                }).addTo(sectionLayerGroup);
+                }).addTo(targetSectionLayerGroup);
 
                 L.marker(
                     [sectionData.center.latitude, sectionData.center.longitude],
@@ -969,8 +1140,12 @@
                             html: `<span>${esc(sectionData.name)}</span>`
                         })
                     }
-                ).addTo(sectionLabelGroup);
+                ).addTo(targetSectionLabelGroup);
             });
+        }
+
+        function renderSections(sections) {
+            renderSectionsOnMap(sectionLayerGroup, sectionLabelGroup, sections);
         }
 
         function renderSpaces(spaces) {
@@ -1031,6 +1206,161 @@
             summary.innerHTML = cards.join("");
         }
 
+        function getEnvironmentalDetections() {
+            const detections = mapData && mapData.environmental_detections
+                ? mapData.environmental_detections
+                : EMPTY_ENVIRONMENTAL_DETECTIONS;
+
+            return {
+                cracks: Array.isArray(detections.cracks) ? detections.cracks : [],
+                signs: Array.isArray(detections.signs) ? detections.signs : []
+            };
+        }
+
+        function normalizeEnvironmentalDetections() {
+            const detections = getEnvironmentalDetections();
+
+            const crackItems = detections.cracks.map((detection, index) => ({
+                id: detection.id || `crack-${index + 1}`,
+                label: detection.label || `Crack ${index + 1}`,
+                latitude: detection.latitude,
+                longitude: detection.longitude,
+                type: "crack",
+                badgeLabel: "Crack",
+                detailLabel: "Crack"
+            }));
+
+            const signItems = detections.signs.map((detection, index) => {
+                const kind = detection.kind || "Sign";
+                return {
+                    id: detection.id || `sign-${index + 1}`,
+                    label: detection.label || `${kind} ${index + 1}`,
+                    latitude: detection.latitude,
+                    longitude: detection.longitude,
+                    type: "sign",
+                    badgeLabel: "Sign",
+                    detailLabel: kind
+                };
+            });
+
+            return [...crackItems, ...signItems].filter(detection => {
+                const latitude = Number(detection.latitude);
+                const longitude = Number(detection.longitude);
+                return Number.isFinite(latitude) && Number.isFinite(longitude);
+            });
+        }
+
+        function environmentalMarkerIcon(type) {
+            if (type === "sign") {
+                return L.divIcon({
+                    className: "env-marker",
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18],
+                    tooltipAnchor: [0, -16],
+                    html: `
+                        <svg class="env-marker-icon" viewBox="0 0 36 36" aria-hidden="true">
+                            <rect x="16.2" y="16" width="3.6" height="16" rx="1.5" fill="#6d4c41"></rect>
+                            <rect x="8" y="5" width="20" height="13" rx="4" fill="#d32f2f" stroke="#ffffff" stroke-width="2.2"></rect>
+                            <rect x="11.5" y="9.5" width="13" height="4" rx="2" fill="#ffffff"></rect>
+                        </svg>
+                    `
+                });
+            }
+
+            return L.divIcon({
+                className: "env-marker",
+                iconSize: [36, 36],
+                iconAnchor: [18, 18],
+                tooltipAnchor: [0, -16],
+                html: `
+                    <svg class="env-marker-icon" viewBox="0 0 36 36" aria-hidden="true">
+                        <rect x="3" y="3" width="30" height="30" rx="10" fill="#fb8c00" stroke="#ffffff" stroke-width="2.2"></rect>
+                        <path d="M19 5 L14 13 L18 13 L13 20 L19 20 L15 31" fill="none" stroke="#5d4037" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M18 13 L23 10" fill="none" stroke="#5d4037" stroke-width="2.2" stroke-linecap="round"></path>
+                        <path d="M19 20 L24 17" fill="none" stroke="#5d4037" stroke-width="2.2" stroke-linecap="round"></path>
+                    </svg>
+                `
+            });
+        }
+
+        function renderEnvironmentalDetections() {
+            if (!environmentDetectionLayerGroup) {
+                return;
+            }
+
+            environmentDetectionLayerGroup.clearLayers();
+
+            normalizeEnvironmentalDetections().forEach(detection => {
+                L.marker([Number(detection.latitude), Number(detection.longitude)], {
+                    icon: environmentalMarkerIcon(detection.type)
+                })
+                    .addTo(environmentDetectionLayerGroup)
+                    .bindTooltip(
+                        `${esc(detection.label)}<br>${esc(detection.detailLabel)}<br>${formatCoordinate(detection.latitude)}, ${formatCoordinate(detection.longitude)}`,
+                        {
+                            direction: "top",
+                            sticky: true,
+                            className: "parking-tooltip"
+                        }
+                    );
+            });
+        }
+
+        function renderEnvironmentSummary() {
+            const summary = document.getElementById("environmentSummary");
+            const allDetections = normalizeEnvironmentalDetections();
+
+            if (!mapData) {
+                summary.innerHTML = `
+                    <div class="section-card">
+                        <h3>Map Unavailable</h3>
+                        <div class="section-meta">${esc(lastLoadError || "Unable to load map data.")}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            if (!allDetections.length) {
+                summary.innerHTML = `
+                    <div class="section-card">
+                        <h3>No Detections Yet</h3>
+                        <div class="section-meta">Add crack and sign coordinates to the backend payload and they will appear here automatically.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const groupedDetections = [
+                {
+                    title: "Cracks",
+                    type: "crack",
+                    items: allDetections.filter(detection => detection.type === "crack")
+                },
+                {
+                    title: "Signs",
+                    type: "sign",
+                    items: allDetections.filter(detection => detection.type === "sign")
+                }
+            ].filter(group => group.items.length);
+
+            summary.innerHTML = groupedDetections.map(group => `
+                <div class="section-card">
+                    <h3>${esc(group.title)}</h3>
+                    <div class="detection-list">
+                        ${group.items.map(detection => `
+                            <div class="detection-item">
+                                <span class="detection-pill ${esc(group.type)}">${esc(detection.badgeLabel)}</span>
+                                <strong>${esc(detection.label)}</strong>
+                                ${detection.type === "sign" ? `<div>Kind: ${esc(detection.detailLabel)}</div>` : ""}
+                                <div>Latitude: ${esc(formatCoordinate(detection.latitude))}</div>
+                                <div>Longitude: ${esc(formatCoordinate(detection.longitude))}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `).join("");
+        }
+
         function renderMapTab() {
             if (!mapData) {
                 renderSectionSummary(null, null);
@@ -1044,11 +1374,38 @@
             renderSectionSummary(mapData.sections, appState.parking_spaces);
         }
 
+        function renderEnvironmentTab() {
+            renderEnvironmentSummary();
+
+            if (!mapData) {
+                return;
+            }
+
+            const environmentTab = document.getElementById("tab4");
+            if (!environmentMap && !environmentTab.classList.contains("active")) {
+                return;
+            }
+
+            createEnvironmentMapIfNeeded();
+            renderEnvironmentLotBounds(mapData.lot_bounds);
+            renderEnvironmentalDetections();
+        }
+
         function updateParkingCounts() {
             const summary = appState.summary || {};
             document.getElementById("occupiedCount").textContent = summary.occupied_spaces ?? 0;
             document.getElementById("availableCount").textContent = summary.available_spaces ?? 0;
             document.getElementById("totalCount").textContent = summary.total_spaces ?? 0;
+        }
+
+        function updateEnvironmentalCounts() {
+            const detections = normalizeEnvironmentalDetections();
+            const crackCount = detections.filter(detection => detection.type === "crack").length;
+            const signCount = detections.filter(detection => detection.type === "sign").length;
+
+            document.getElementById("crackCount").textContent = crackCount;
+            document.getElementById("signCount").textContent = signCount;
+            document.getElementById("environmentalTotalCount").textContent = crackCount + signCount;
         }
 
         function updateHeader() {
@@ -1171,7 +1528,9 @@
             chooseDevice();
             updateHeader();
             updateParkingCounts();
+            updateEnvironmentalCounts();
             renderMapTab();
+            renderEnvironmentTab();
             renderDevicePanel();
             renderDataTab();
         }
@@ -1276,6 +1635,13 @@
 
             if (tabName === "tab1" && parkingMap) {
                 window.setTimeout(() => parkingMap.invalidateSize(), 50);
+            }
+
+            if (tabName === "tab4") {
+                renderEnvironmentTab();
+                if (environmentMap) {
+                    window.setTimeout(() => environmentMap.invalidateSize(), 50);
+                }
             }
         }
 

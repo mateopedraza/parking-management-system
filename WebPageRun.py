@@ -7,7 +7,14 @@ from flask import Flask, Response, jsonify, make_response, request, send_file, s
 from flask_cors import CORS
 
 from backend_state import BackendState
-from Tab1 import find_matching_space, load_sample_vehicles, lot_bounds, parking_sections, parking_spaces
+from Tab1 import (
+    environmental_detections,
+    find_matching_space,
+    load_sample_vehicles,
+    lot_bounds,
+    parking_sections,
+    parking_spaces,
+)
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -71,6 +78,28 @@ def serialize_point(point):
         "latitude": point.get("latitude"),
         "longitude": point.get("longitude"),
     }
+
+
+def serialize_detection(detection, fallback_id):
+    point = serialize_point(detection)
+    if isinstance(detection, dict):
+        detection_id = detection.get("id") or fallback_id
+        label = detection.get("label") or detection.get("name") or detection_id
+        kind = detection.get("kind")
+    else:
+        detection_id = fallback_id
+        label = fallback_id
+        kind = None
+
+    payload = {
+        "id": detection_id,
+        "label": label,
+        "latitude": point["latitude"],
+        "longitude": point["longitude"],
+    }
+    if kind:
+        payload["kind"] = kind
+    return payload
 
 
 def serialize_space(space_id, values):
@@ -148,6 +177,16 @@ def get_map_data():
             "spaces": {
                 space_id: serialize_space(space_id, values)
                 for space_id, values in spaces.items()
+            },
+            "environmental_detections": {
+                "cracks": [
+                    serialize_detection(detection, f"crack-{index}")
+                    for index, detection in enumerate(environmental_detections.get("cracks", []), start=1)
+                ],
+                "signs": [
+                    serialize_detection(detection, f"sign-{index}")
+                    for index, detection in enumerate(environmental_detections.get("signs", []), start=1)
+                ],
             },
         }
     )

@@ -21,6 +21,26 @@ SECTION_LAYOUTS = {
             'bottom_right': (43.77120000, -79.50551111),
         },
     },
+    'C': {
+        'name': 'Section 3',
+        'spaces': 10,
+        'corners': {
+            'top_left': (43.77090278, -79.50561944),
+            'top_right': (43.77091667, -79.50555833),
+            'bottom_left': (43.77052222, -79.50545833),
+            'bottom_right': (43.77053889, -79.50539167),
+        },
+    },
+    'D': {
+        'name': 'Section 4',
+        'spaces': 10,
+        'corners': {
+            'top_left': (43.77084167, -79.50543889),
+            'top_right': (43.77085556, -79.50537778),
+            'bottom_left': (43.77059722, -79.50533611),
+            'bottom_right': (43.77061111, -79.50527222),
+        },
+    },
 }
 
 LOT_BOUNDS = {
@@ -28,6 +48,40 @@ LOT_BOUNDS = {
     'top_right': (43.77158889, -79.50555833),
     'bottom_left': (43.77033056, -79.50585556),
     'bottom_right': (43.77052222, -79.50512778),
+}
+
+ENVIRONMENTAL_DETECTIONS = {
+    'cracks': [
+        {
+            'label': 'Crack 1',
+            'latitude': 43.77138056,
+            'longitude': -79.50593333,
+        },
+        {
+            'label': 'Crack 2',
+            'latitude': 43.77146944,
+            'longitude': -79.50576944,
+        },
+        {
+            'label': 'Crack 3',
+            'latitude': 43.77118611,
+            'longitude': -79.50586667,
+        },
+    ],
+    'signs': [
+        {
+            'label': 'Wrong Way / Do Not Enter Sign 1',
+            'kind': 'Wrong Way / Do Not Enter',
+            'latitude': 43.77050278,
+            'longitude': -79.50550000,
+        },
+        {
+            'label': 'Wrong Way / Do Not Enter Sign 2',
+            'kind': 'Wrong Way / Do Not Enter',
+            'latitude': 43.77097222,
+            'longitude': -79.50568056,
+        },
+    ],
 }
 
 
@@ -119,6 +173,7 @@ def build_parking_layout():
 
 parking_sections, parking_spaces = build_parking_layout()
 lot_bounds = ordered_corners(LOT_BOUNDS)
+environmental_detections = ENVIRONMENTAL_DETECTIONS
 
 
 def distance_between_points(lat1, lon1, lat2, lon2):
